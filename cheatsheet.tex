@@ -1,0 +1,658 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% writeLaTeX Example: A quick guide to LaTeX
+%
+% Source: Dave Richeson (divisbyzero.com), Dickinson College
+% 
+% A one-size-fits-all LaTeX cheat sheet. Kept to two pages, so it 
+% can be printed (double-sided) on one piece of paper
+% 
+% Feel free to distribute this example, but please keep the referral
+% to divisbyzero.com
+% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% How to use writeLaTeX: 
+%
+% You edit the source code here on the left, and the preview on the
+% right shows you the result within a few seconds.
+%
+% Bookmark this page and share the URL with your co-authors. They can
+% edit at the same time!
+%
+% You can upload figures, bibliographies, custom classes and
+% styles using the files menu.
+%
+% If you're new to LaTeX, the wikibook is a great place to start:
+% http://en.wikibooks.org/wiki/LaTeX
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[9pt,landscape]{article}
+\usepackage{amssymb,amsmath,amsthm,amsfonts}
+\usepackage{multicol,multirow}
+\usepackage{calc}
+\usepackage{ifthen}
+\usepackage{extsizes}
+\usepackage[landscape]{geometry}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+
+
+\ifthenelse{\lengthtest { \paperwidth = 11in}}
+    { \geometry{top=.5in,left=.5in,right=.5in,bottom=.5in} }
+    {\ifthenelse{ \lengthtest{ \paperwidth = 297mm}}
+        {\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+        {\geometry{top=1cm,left=1cm,right=1cm,bottom=1cm} }
+    }
+\pagestyle{empty}
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\footnotesize\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt plus 0.5ex}
+% -----------------------------------------------------------------------
+
+\title{COMP 540 Midterm Note}
+
+\begin{document}
+
+\raggedright
+\footnotesize
+
+\begin{center}
+     \Large{\textbf{COMP 540 Final Note}}
+\end{center}
+\begin{multicols}{3}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\section{1 \ Linear models for regression}
+\subsection{1.1 \ Least squares regression}
+\begin{itemize}
+	\item Loss function: $J(\theta) = \frac{1}{2m} \sum_{i=1}^m (y^{(i)} - h_{\theta}(x^{(i)}))^2$\\
+	Vectorized form: $J(\theta) = \frac{1}{2m} (X \theta - y)^T (X \theta - y)$
+	\item Gradient: $\nabla_{\theta} J(\theta) = \frac{1}{m} X^T (X\theta - y)$
+	\item Closed form solution: $\hat{\theta} = (X^T X)^{-1} X^T y$
+	\item Assume $y^{(i)} = (\theta^*)^T x^{(i)} + \epsilon$, where $E[\epsilon] = 0, Var[\epsilon] = \sigma^2$: $E[\hat{\theta}] = \theta^*, Var[\hat{\theta}] = (X^T X)^{-1} \sigma^2$.
+	\item $\equiv$ MLE on $\theta$ with normal distributed error $\epsilon$.
+\end{itemize}
+
+\subsection{1.2 \ L2-Regularization: ridge regression}
+\begin{itemize}
+	\item Loss function: $J(\theta) = \frac{1}{2m} \sum_{i=1}^m (y^{(i)} - h_{\theta}(x^{(i)}))^2 + \frac{\lambda}{2m} \sum_{j = 1}^d \theta_j^2$
+	\item Closed form solutionn: $\hat{\theta} = (X^T X + \lambda I)^{-1} X^T y$
+	\item $\equiv$ MAP on $\theta$ with prior: $\theta \sim \mathcal{N}(0, \alpha^2 I)$, with $\frac{\lambda}{m} = \frac{\sigma^2}{\alpha^2}$.
+\end{itemize}
+
+\subsection{1.3 \ L1-Regularization: lasso regression}
+\begin{itemize}
+	\item Loss function: $J(\theta) = \frac{1}{2m} \sum_{i=1}^m (y^{(i)} - h_{\theta}(x^{(i)}))^2 + \frac{\lambda}{2m} \sum_{j = 1}^d |\theta_j|$
+	\item $\equiv$ MAP on $\theta$ with prior: $\theta_j \sim Laplace(0, \alpha), \forall j$
+\end{itemize}
+
+\subsection{1.4 \ Locally weighted linear regression}
+\begin{itemize}
+	\item Loss function: $J(\theta) = \frac{1}{2m} \sum_{i=0}^m w^{(i)} (y^{(i)} - \theta^T x^{(i)})^2$\\
+	where $w^{(i)} = \exp \left( -\frac{(x - x^{(i)})^T (x - x^{(i)})}{2 \sigma^2} \right)$\\
+	Vectorized form: $J(\theta) = \frac{1}{2m} (X\theta - y)^T W (X\theta - y)$
+	\item Gradient: $\nabla_{\theta} J(\theta) = \frac{1}{m} X^T W (X\theta - y)$
+	\item Closed form solution: $\hat{\theta} = (X^T W X)^{-1} X^T W y$
+	\item Non-parametric method.
+\end{itemize}
+
+\section{2 \ Linear models for classification}
+\subsection{2.1 \ Discriminative models for classification}
+\begin{itemize}
+	\item $P(y=1 | x) = h_{\theta}(x) = \frac{1}{1 + \exp (-\theta^T x)}$\\
+	$\Rightarrow \log \frac{P(y=1 | x)}{P(y=0 | x)} = \theta^T x$
+	\item Loss (cross-entropy) function: (\textit{convex \& has a global minimum}) $J(\theta) = -\frac{1}{m} \sum_{i=0}^m y^{(i)} \log h_{\theta} (x^{(i)}) + (1 - y^{(i)}) \log (1 - h_{\theta}(x^{(i)}))$
+	\item L2-regularizion: $J_{reg}(\theta) = J(\theta) + \frac{\lambda}{m}\sum_{j=1}^d \theta_j^2$\\
+	L1-regularizion: $J_{reg}(\theta) = J(\theta) + \frac{\lambda}{m}\sum_{j=1}^d |\theta_j|$
+\end{itemize}
+
+\subsection{2.2 \ Generative models for classification}
+\subsubsection{2.2.1 \ Gaussian discriminant analysis (GDA)}
+\begin{itemize}
+	\item Assumptions:
+	$y \sim Bernoulli(\phi)$\\
+	$x|y=0 \sim \mathcal{N}(\mu_0, \Sigma)$ \& $x|y=1 \sim \mathcal{N}(\mu_1, \Sigma)$
+	\item Likelihood: $\mathcal{L}(D) = \prod_{i=1}^m P(x^{(i)}, y^{(i)}; \phi, \mu_0, \mu_1, \Sigma)$\\
+	$= \prod_{i=1}^m \phi^{y^{(i)}} (1 - \phi)^{(1 - y^{(i)})} \mathcal{N}(x^{(i)} | \mu_1, \Sigma)^{y^{(i)}} \mathcal{N}(x^{(i)} | \mu_0, \Sigma)^{(1 - y^{(i)})}$
+	\item Estimation for parameters:\\
+	$\phi = \frac{1}{m} \sum_{i=1}^m y{(i)}$\\
+	$\mu_1 = \frac{\sum_{i=1}^m y^{(i)} x^{(i)}}{\sum_{i=1}^m y^{(i)}}, \mu_0 = \frac{\sum_{i=1}^m (1 - y^{(i)}) x^{(i)}}{\sum_{i=1}^m (1 - y^{(i)})}$\\
+	$\Sigma = \frac{1}{m} \sum_{i=1}^m (x - \mu_{y^{(i)}}) (x - \mu_{y^{(i)}})^T$
+	\item Linear decision boundaries when same $\Sigma$; quadratic boundaries when each class has its own $\Sigma$.
+\end{itemize}
+
+\subsubsection{2.2.2 \ Naive Bayes models}
+\begin{itemize}
+	\item Assumptions: $P(x|y) = \prod_{j=1}^d P(x_j|y)$
+	\item Bernoulli Naive Bayes models are estimated using counts, regularize using Beta prior ($\equiv$ pre-count).
+\end{itemize}
+
+\subsection{2.3 \ Model criteria}
+\begin{itemize}
+	\item False negative: positive predicted to be negative.
+	\item False positive: negative predicted to be positive.
+	\item specificity = $P(y_{pred} = 0 | y = 0) = \frac{TN}{FP + TN}$
+	\item sensitivity = $P(y_{pred} = 1 | y = 1) = \frac{TP}{FN + TP}$
+	\item true positive rate (TPR) = sensitivity
+	\item false positive rate (FPR) = 1 - specificity
+	\item ROC curve represents FPR and TPR as a function of classification threshold. $0.5 \leq$ (area under curve) $\leq 1.0$.
+\end{itemize}
+
+\subsection{2.4 \ Multiclass classification}
+\subsubsection{2.4.1 \ One vs. All (OVA) \& One vs. One (OVO)}
+\begin{itemize}
+	\item OVA: not theoretically justified; simple and widely used.
+	\item OVO: needs $O(K^2)$ classifiers for $K$ classes; overfitting!
+\end{itemize}
+
+\subsubsection{2.4.2 \ Softmax}
+\begin{itemize}
+	\item Log-likelyhood: $\ell(\mathcal{D}) = \frac{1}{m} \sum_{i=1}^m \sum_{c=1}^K I(y^{(i)}=c) \log{\frac{\exp{({\theta^{(c)}}^T x^{(i)})}} {\sum_{c'}\exp{({\theta^{(c')}}^T x^{(i)})}}}$
+	\item Regularized loss: $J(\theta) = -\ell(\mathcal{D}) + \frac{\lambda}{2m} \sum_{j=1}^d \sum_{c=1}^K {\theta_j^{(c)}}^2$
+	\item Gradient: $\nabla_{\theta} J(\theta) = -\frac{1}{m} \sum_{i=1}^m x^{(i)} (I\{y^{(i)} = c\} - P(y^{(i)}=c|x^{(i)};\theta)) + \frac{\lambda}{m}\sum_{j=1}^d \theta_j^{(c)}$
+\end{itemize}
+
+\section{3 \ Kernel methods}
+\subsection{3.1 \ Kernel functions}
+\begin{itemize}
+	\item Gaussian kernel: $\kappa(x, x') = \exp \left( -\frac{\| x - x' \|^2}{2\sigma^2} \right)$
+	\item  Polynomial kernel: $\kappa(x, x') = (1 + x^T x')^p$
+	\item Mercer's theorem ($\Leftrightarrow$ valid kernel): Gram matrix $K$ whose elements are $\kappa(x^{(i)}, x^{(j)}), 1 \leq i, j \leq m$, should be positive definite for all possible $\{x^{(i)} | 1 \leq i \leq m\}$\\
+	$\Leftrightarrow \exists \phi$ s.t. $\kappa(x, x') = \phi(x)^T \phi(x')$
+\end{itemize}
+
+\subsection{3.2 \ Perceptron}
+\begin{itemize}
+	\item Prediction: $h_{\theta}(x) = \mathrm{sign} (\theta^T x)$
+	\item Update rule: $\theta \leftarrow \theta + \eta x^{(i)} y^{(i)}$, when $h_{\theta}(x^{(i)}) y^{(i)} = -1$
+	\item Convergence bounds: Let $\|x^{(i)}\| \leq R, \forall  1 \leq i \leq m$, the perceptron converges in at most $\frac{R^2 \|\theta^*\|^2}{\gamma^2}$ updates, where $\gamma > 0$, $y^{(i)} (\theta^T x^{(i)}) \geq \
+	\gamma, \forall 1 \leq i \leq m$. (\textit{Appendix})
+	
+	\item Kernalized version: (if $\eta=1$, $\theta = \sum_{(x,y) \in \mathcal{D}_{mistake}} xy$)\\
+	$\hat{y} = \mathrm{sign}(\sum_{(x^{(i)}, y^{(i)}) \in \mathcal{D}} \alpha^{(i)} \langle x^{(i)}, x \rangle)$, in training:\\
+	update $\alpha^{(i)} \leftarrow \alpha^{(i)} + y^{(i)}$, when $y\hat{y}=-1$
+\end{itemize}
+
+\subsection{3.3 \ Support vector machine (SVM)}
+\subsubsection{3.3.1 \ Maximize margin}
+\begin{itemize}
+	\item Optimization problem: $\min_{\theta, \theta_0} \frac{1}{2} \|\theta\|^2$, subject to $y^{(i)}(\theta^T x^{(i)} + \theta_0) \geq 1, \forall 1 \leq i \leq m$\\
+	\item Dual problem:\\
+	$\max_{\alpha} \sum_{i=1}^m \alpha_i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m \alpha_i \alpha_j y^{(i)} y^{(j)} \langle x^{(i)}, x^{(j)} \rangle$
+	subject to: $\alpha_i \geq 0, \forall 1 \leq i \leq m$; $\sum_{i=1}^m \alpha_i y^{(i)} = 0$
+	\item Results of solving Lagrange:\\
+	$\theta = \sum_{i=1}^m \alpha^{(i)} x^{(i)} y^{(i)}$ \& $\sum_{i=1}^m \alpha^{(i)} y^{(i)} = 0$	
+	\item KTT condition yields:\\
+	$\alpha^{(i)} [y^{(i)} (\theta^T x^{(i)} + \theta_0) - 1] = 0, \forall 1 \leq i \leq m$
+	\item Prediction: $h_{\theta}(x) = \mathrm{sign}(\sum_{i=1}^m \alpha^{(i)} y^{(i)} \langle x^{(i)}, x \rangle + \theta_0)$
+\end{itemize}
+
+\subsubsection{3.3.2 \ Non-separable case}
+\begin{itemize}
+	\item Optimization problem: $\min_{\theta, \theta_0} \frac{1}{2} \|\theta\|^2 + C \sum_{i=1}^m \xi^{(i)}$, subject to $y^{(i)}(\theta^T x^{(i)} + \theta_0) \geq 1 - \xi^{(i)}, \forall 1 \leq i \leq m$; and $\xi^{(i)} \geq 0, \forall 1 \leq i \leq m$\\
+	\item Dual problem:\\
+	$\max_{\alpha} \sum_{i=1}^m \alpha_i - \frac{1}{2} \sum_{i=1}^m \sum_{j=1}^m \alpha_i \alpha_j y^{(i)} y^{(j)} \langle x^{(i)}, x^{(j)} \rangle$\\
+	subject to: $0 \leq \alpha_i \leq C, \forall 1 \leq i \leq m$; $\sum_{i=1}^m \alpha_i y^{(i)} = 0$
+\end{itemize}
+
+\subsubsection{3.3.3 \ Hinge loss -- \textit{another view of SVM}}
+\begin{itemize}
+	\item Define $h_{\theta}(x) = \theta^T x + \theta_0$, rewrite constraints into $\xi^{(i)} = \max(0, 1 - y^{(i)} h_{\theta}(x))$.
+	\item Loss function: $J(\theta) = C\sum_{i=1}^m \max(0, 1 - y^{(i)} h_{\theta}(x)) + \frac{1}{2} \| \theta \|^2$
+\end{itemize}
+
+\subsubsection{3.3.4 \ Multiclass SVM}
+\begin{itemize}
+	\item Loss function: $J(\theta) = \sum_{i=1}^m \sum_{j \neq y^{(i)}} \max{(0, {\theta^{(j)}}^T x^{(i)} - {\theta^{y^{(j)}}}^T x^{(i)} + \Delta)}$
+	\item $\Delta$ is some fixed margin.
+\end{itemize}
+
+\subsubsection{3.3.5 \ SVM for regression}
+\begin{itemize}
+	\item Loss function: $L_{\epsilon} (y, \hat{y}) = \max{(0, |y - \hat{y}| - \epsilon)}$ in $J(\theta) = C\sum_{i=1}^m L_{\epsilon}(y^{(i)}, \theta^T x^{(i)} + \theta_0) + \frac{1}{2} \theta^T \theta$
+	\item $J(\theta)$ is convex but not differentiable, the optimization problem is unconstrained.
+	\item Quadratic programming (QP) problem: $\min_{\theta} C\sum_{i=1}^m (\xi_+^{(i)} + \xi_-^{(i)}) + \frac{1}{2} \theta^T \theta$, subject to $\xi_+^{(i)} \geq 0, \xi_-^{(i)} \geq 0, \forall 1 \leq i \leq m$; $\theta^T x^{(i)} + \theta_0 - \xi_-^{(i)} - \epsilon \leq y^{(i)} \leq \theta^T x^{(i)} + \theta_0 + \xi_+^{(i)} + \epsilon$
+	\item Lagrange yields: $\theta = \sum_{i=1}^m (\alpha_+^{(i)} - \alpha_-^{(i)}) x^{(i)}$, where $\alpha_+^{(i)}$ and $\alpha_-^{(i)}$ are Lagrange multipliers of two constraints.
+	\item Prediction: $h_{\theta}(x) = \sum_{i=1}^m (\alpha_+^{(i)} - \alpha_-^{(i)}) \langle x^{(i)}, x \rangle + \theta_0$
+\end{itemize}
+
+\section{4 \ Neural Networks}
+\textit{Note}: A feed forword network with a linear output layer and at least one hidden layer with any squashing activation function (e.g. sigmoid, ReLU), can approaximate any function from $\mathbb{R}^d \rightarrow \mathbb{R}$ to arbitrary percision with enough hidden units.
+\subsection{4.1 \ Activation functions}
+\begin{itemize}
+	\item $sigmoid(x) = \sigma(x) = \frac{1}{1 + \exp{(-x)}}$\\
+	$\frac{\mathrm{d}}{\mathrm{d} x} \sigma(x) = \sigma(x)(1-\sigma(x))$
+	\item $\tanh(x) = \frac{\exp{(x)} - \exp{(-x)}}{\exp{(x)} + \exp{(-x)}}$ (\textit{unbias, better than sigmoid})
+	\item $ReLU(x) = \max(0, x)$
+	\item Softmax function: $g(z_i) = \frac{\exp{(z_i)}}{\sum_j \exp{(z_j)}}$ (\textit{output layer})
+\end{itemize}
+
+\subsection{4.2 \ Backpropagation}
+\begin{itemize}
+	\item Using chain rule, propagate derivatives in inverse order.
+	\item Gradients need to be added up at forks (\textit{accumulative})!
+\end{itemize}
+
+\subsection{4.3 \ Convolutional neural networks}
+\begin{itemize}
+	\item Let $K$ be filter number, $F$ be filter size, $S$ be stride, $P$ be padding.
+	\item A conv layer takes as input of a volume $W_1 \times H_1 \times D_1$, produces an output volume $W_2 \times H_2 \times D_2$:\\
+	$W_2 = \frac{W_1 - F + 2P}{S} + 1$\\
+	$H_2 = \frac{H_1 - F + 2P}{S} + 1$\\
+	$D_2 = K$
+	\item Total number of parameters: $F \times F \times D_1$ weights per filter; $F \times F \times D_1 \times K$ weights, $K$ biases.
+	\item Pooling layer (subsampling): input $W_1 \times H_1 \times D$, output $W_2 \times H_2 \times D$:\\
+	$W_2 = \frac{W_1 - F}{S} + 1$\\
+	$H_2 = \frac{H_1 - F}{S} + 1$
+	\item Classical architecture:
+	[(CONV -- RELU)*N -- POOL]*M -- (FC -- RELU)*K -- SOFTMAX
+\end{itemize}
+
+%\subsection{4.4 \ Training deep networks}
+%\begin{itemize}
+%	\item Decide an architecture (MLP)
+%	\item Choose activation functions for layers
+%	\item Choose loss function
+%	\item Choose regularization approach
+%	\item Initialize parameters of network
+%	\item Choose learning rate $\alpha$
+%	\item Normalize / process your training data
+%	\item Data augmentation
+%	\item Decide when to stop
+%	\item Minibatch gradient estimation
+%\end{itemize}
+
+\subsection{4.4 \ Optimization for training deep models}
+\subsection{4.4.1 \ Momentum}
+\begin{itemize}
+	\item \textbf{Require}: learning rate $\alpha$, initial parameter $\theta$, batch size $m$, momentum parameter $\mu$, initial velocity $v$.
+	\item Sample a mini batch of $m$ examples $(x^{(i)}, y^{(i)})$
+	\item Compute gradient estimate $\hat{g} \leftarrow \frac{1}{m} \nabla_{\theta} \sum_i L(h_{\theta}(x^{(i)}), y^{(i)})$
+	\item Compute velocity update $v \leftarrow \mu v - \alpha \hat{g}$
+	\item Apply update $\theta \leftarrow \theta + v$
+\end{itemize}
+
+\subsection{4.4.2 \ Nesterov momentum}
+\begin{itemize}
+	\item \textbf{Require}: learning rate $\alpha$, initial parameter $\theta$, batch size $m$, momentum parameter $\mu$, initial velocity $v$.
+	\item Sample a mini batch of $m$ examples $(x^{(i)}, y^{(i)})$
+	\item Apply interim update $\tilde{\theta} \leftarrow \tilde{\theta} + \mu v$
+	\item Compute gradient at interim point $\hat{g} = \frac{1}{m} \nabla_{\tilde{\theta}} \sum_i L(h_{\tilde{\theta}(x^{(i)}), y^{(i)}})$
+	\item Compute velocity update $v \leftarrow \mu v - \alpha \hat{g}$
+	\item Apply update $\theta \leftarrow \theta + v$
+\end{itemize}
+
+\subsection{4.4.3 \ AdaGrad}
+\begin{itemize}
+	\item \textbf{Require}: step size $\alpha$, initial parameter $\theta$, batch size $m$, $\delta=10^{-7}$ (constant for numerical stability)
+	\item Compute gradient on minibatch $\hat{g}_{ij}^{(l)} \leftarrow \frac{1}{m} \nabla_{\theta_{ij}}^{(l)} \sum_i L(h_{\theta}(x^{(i)}), y^{(i)})$
+	\item Accumulate squared gradient $r_{ij}^{(l)} \leftarrow r_{ij}^{(l)} + \hat{g}_{ij}^{(l)}*\hat{g}_{ij}^{(l)}$
+	\item Compute gradient $\Delta \theta_{ij}^{(l)} \leftarrow -\frac{\alpha}{\delta + \sqrt{r_{ij}^{(l)}}} \hat{g}_{ij}^{(l)}$
+	\item Apply update $\theta_{ij}^{(l)} \leftarrow \theta_{ij}^{(l)} + \Delta \theta_{ij}^{(l)}$
+\end{itemize}
+
+\subsection{4.4.4 \ RMSprop}
+\begin{itemize}
+	\item \textbf{Require}: step size $\alpha$, initial parameter $\theta$, batch size $m$, $\delta=10^{-7}$ (constant for numerical stability), exponential decay rate $\rho$.
+	\item Compute gradient on minibatch $\hat{g}_{ij}^{(l)} \leftarrow \frac{1}{m} \nabla_{\theta_{ij}}^{(l)} \sum_i L(h_{\theta}(x^{(i)}), y^{(i)})$
+	\item Accumulate squared gradient $r_{ij}^{(l)} \leftarrow \rho r_{ij}^{(l)} + (1-\rho) \hat{g}_{ij}^{(l)}*\hat{g}_{ij}^{(l)}$
+	\item Compute gradient $\Delta \theta_{ij}^{(l)} \leftarrow -\frac{\alpha}{\delta + \sqrt{r_{ij}^{(l)}}} \hat{g}_{ij}^{(l)}$
+	\item Apply update $\theta_{ij}^{(l)} \leftarrow \theta_{ij}^{(l)} + \Delta \theta_{ij}^{(l)}$
+\end{itemize}
+
+\subsection{4.4.5 \ Adam (adaptive moments)}
+\begin{itemize}
+	\item \textbf{Require}: step size $\alpha$ ($10^{-3}$ default), initial parameter $\theta$, batch size $m$, exponential decay rates for moment estimates $\rho_1$ ($0.99$ default) \& $\rho_2$ ($0.999$ default), $\delta=10^{-7}$ (constant for numerical stability)
+	\item Initialize time step $t=0$, first and second moment $s=0$, $r=0$
+	\item Compute gradient on minibatch $\hat{g}_{ij}^{(l)} \leftarrow \frac{1}{m} \nabla_{\theta_{ij}}^{(l)} \sum_i L(h_{\theta}(x^{(i)}), y^{(i)})$
+	\item $t \leftarrow t + 1$
+	\item Update biased first moment $s_{ij}^{(l)} \leftarrow \rho_1 s_{ij}^{(l)} + (1 - \rho_1) \hat{g}_{ij}^{(l)}$
+	\item Update biased second moment $r_{ij}^{(l)} \leftarrow \rho_2 r_{ij}^{(l)} + (1 - \rho_2) \hat{g}_{ij}^{(l)}*\hat{g}_{ij}^{(l)}$
+	\item Correct bias in first moment $\hat{s}_{ij}^{(l)} = \frac{s_{ij}^{(l)}}{1 - \rho_1^t}$
+	\item Correct bias in second moment $\hat{r}_{ij}^{(l)} = \frac{r_{ij}^{(l)}}{1 - \rho_2^t}$
+	\item Compute gradient $\Delta \theta_{ij}^{(l)} \leftarrow -\frac{\alpha \hat{s}_{ij}^{(l)}}{\delta + \sqrt{\hat{r}_{ij}^{(l)}}} $
+	\item Apply update $\theta_{ij}^{(l)} \leftarrow \theta_{ij}^{(l)} + \Delta \theta_{ij}^{(l)}$
+\end{itemize}
+
+\section{5 \ Decision trees}
+\subsection{5.1 \ Cost functions}
+\begin{itemize}
+	\item Misclassification rate: ($\hat{y}$ = the majority label in $\mathcal{D}$)\\
+	$cost(\mathcal{D}) = \frac{1}{|\mathcal{D}|} \sum_{(x,y) \in \mathcal{D}} I(y \neq \hat{y})$
+	\item Entropy: ($p$ = fraction of positive examples in $\mathcal{D}$)\\
+	$cost(\mathcal{D}) = -p \log_2{p} - (1-p) \log_2{(1-p)}$
+	\item Gini index: (same as entropy)\\
+	$cost(\mathcal{D}) = 2p(1-p)$
+\end{itemize}
+
+\subsection{5.2 \ Decision tree for regression}
+\begin{itemize}
+	\item Define $cost(\mathcal{D}) = \sum_{i=1}^m (y^{(i)} - \overline{y})^2$\\
+	where $\overline{y} = \frac{1}{|\mathcal{D}|} \sum_{i=1}^m y^{(i)}$
+\end{itemize}
+
+\subsection{5.3 \ Node is not worth splitting when}
+\begin{itemize}
+	\item Node is pure
+	\item Depth exceeds max depth
+	\item $|\mathcal{D}_{\mathrm{left}}|$ or $|\mathcal{D}_{\mathrm{right}}|$ is too small
+	\item Reduction in cost is too small
+\end{itemize}
+
+\subsection{5.4 \ Avoid overfitting}
+\begin{itemize}
+	\item Early stopping -- stop growing the tree when the decrease in error is not sufficient to justify the complexity of an additional level.
+	\item Post pruning -- grow the full tree and then prune using a validation set to guide subtree removal. Evaluate CV error on each subtree and pick tree whose error is within $1$ standard deviation of minimum.
+\end{itemize}
+
+\section{6 \ Ensembles}
+\subsection{6.1 \ Bagging}
+\begin{itemize}
+	\item Assume errors of individual members are uncorrelated.
+	\item For regression: when $h_l(x) = f(x) + \epsilon_l(x)$ for $1 \leq l \leq L$, and $\epsilon_l \sim \mathcal{N}(0, {\sigma_l}^2)$\\
+	$\Rightarrow E_{bag} = \frac{1}{L} E_{avg}$ (\textit{expected squared error})
+	\item For classification: $\epsilon =$ error of each classifier, and $\epsilon < \frac{1}{2}$
+	$\Rightarrow E_{bag} = \sum_{i=\frac{L}{2} + 1}^L \binom{i}{L} \epsilon^i (1 - \epsilon)^{L-i}$
+\end{itemize}
+
+\subsection{6.2 \ Boosting}
+\begin{itemize}
+	\item Loss function: $J_l = \sum_{i=1}^m w_l^{(i)} \mathrm{I}(h_l(x^{(i)}) \neq y^{(i)})$
+	\item Prediction: $h(x) = \mathrm{sign}(\sum_{l=1}^L \alpha_l h_l(x))$
+	\item Adaboost algorithm: initialize $w_1^{(i)} = \frac{1}{m}$, for $1 \leq i \leq m$\\
+	1. fit $h_l$ to minimize $J_l = \frac{1}{m} \sum_{i=1}^m w_l^{(i)} L(y^{(i)}, h_l(x^{(i)}))$\\
+	2. calculate error rate $\epsilon_l = \frac{\sum_{i=1}^m w_l^{(i)} \mathrm{I}(h_l(x^{(i)} \neq y^{(i)}))}{\sum_{i=1}^m w_l^{(i)}}$\\
+	3. calculate $\alpha_l = \frac{1}{2} \log{\left( \frac{1 - \epsilon_l}{\epsilon_l} \right)}$, stop if $\epsilon_l \geq \frac{1}{2}$\\
+	4. update $w_{l+1}^{(i)} = \left\{
+	\begin{aligned}
+		&w_l^{(i)} \exp{(\alpha_l)}, \ \mathrm{incorrect \ on} \ x^{(i)}\\
+		&w_l^{(i)} \exp{(-\alpha_l)}, \ \mathrm{correct \ on} \ x^{(i)}
+	\end{aligned}
+	\right.$
+\end{itemize}
+
+\subsection{6.3 \ Gradient boosting}
+\subsubsection{6.3.1 \ Gradient boosting for regression}
+\begin{itemize}
+	\item Residuals are negative gradients (squared error loss):\\ $J = \sum_{i=1}^m \frac{1}{2}(y - h(x))^2 \Rightarrow \frac{\partial J}{\partial h(x^{(i)})} = h(x^{(i)}) - y^{(i)}$
+\end{itemize}
+
+\subsubsection{6.3.1 \ Gradient boosting for classification}
+\begin{itemize}
+	\item Loss function: $J = \frac{1}{m} \sum_{i=1}^m D_{KL} (y^{(i)}, h(x^{(i)}))$
+	\item Gradient boosting algorithm ($k$ classes):\\
+	-- Start with an initial $h^{0}...h^{k}$ for $x^{(1)}...x^{(m)}$\\
+	-- Repeat until convergence: Calculate matrix of gradients, it each $h_{add}$ to the negative gradient, $h \leftarrow h + h_{add}$
+\end{itemize}
+
+\section{7 \ Probabilistic graphical models}
+\subsection{7.1 \ Directed models -- Bayesian network}
+\begin{itemize}
+	\item $P(X) = \prod_i P(x_i | Parents(x_i))$
+	\item Reduce number of parameters $O(k^n) \rightarrow O(nk^m)$ if each variable in graph has no more than $m$ parents.
+\end{itemize}
+
+\subsection{7.2 \ Undirected models -- Markov network}
+\begin{itemize}
+	\item $\tilde{P}(X) = \prod_{C \in G} \phi(C)$ ($C$ is a clique in graph)
+	\item Partition function: $Z = \int_X \tilde{P}(X) \mathrm{d}X$ or $Z = \sum_X \tilde{P}(X)$
+	\item $P(X) = \frac{1}{Z} \tilde{P}(X)$
+	\item Energy function $E$: $\tilde{P}(X) = \exp{(-E(X))}$\\
+	high (low) energy $\Leftrightarrow$ low (high) $\tilde{P}(X)$
+\end{itemize}
+
+\subsection{7.3 \ Sampling}
+\subsubsection{7.3.1 \ Ancestral sampling}
+\begin{itemize}
+	\item For directed graphical models, polynomial time.
+	\item Algorithm:\\
+	-- Sort variables in topological order\\
+	-- Sample $x_i$ from distribution $P(x_i | Parents(x_i))$
+\end{itemize}
+
+\subsubsection{7.3.2 \ Gibbs sampling}
+\begin{itemize}
+	\item For undirected graphical models.
+	\item Algorithm:\\
+	-- Start with randomly generated values $x_1, ..., x_n$\\
+	-- Iteratively visit each $x_i$ and sample a value for it based on $P(x_i | Neighbors(x_i))$\\
+	-- Repeat previous step, generate stream of samples
+\end{itemize}
+
+\subsection{7.4 \ Hidden Markov models}
+\begin{itemize}
+	\item Specified by sets $S$ (hidden states), $O$ (observations) and probability parameters $\lambda = [\pi, a, b]$\\
+	-- $\pi$ is initial state probability\\
+	-- $a$ is hidden state transition probability\\
+	-- $b$ is emission probability
+	\item Inference problems:\\
+	-- Filtering: $P(X_t | e_1, ..., e_t)$\\
+	-- Smoothing: $P(X_k | e_1, ..., e_t), k < t$\\
+	-- Most likely state sequence: $\arg \max_{X_1, ..., X_t} P(X_1, ..., X_t | e_1, ..., e_t)$
+\end{itemize}
+
+\subsubsection{7.4.1 \ Forward computation -- filtering}
+\begin{itemize}
+	\item Define: $\alpha_t(i) = P(e_1, ..., e_t, X_t = s_i)$
+	\item Algorithm:\\
+	-- $\alpha_0(i) = \pi_i$, $1 \leq i \leq n$ where $|S| = n$\\
+	-- $\alpha_{t+1}(i) = b_j(e_{t+1})\sum_{i=1}^n \alpha_t(i) a_{ij}$, $1 \leq j \leq n$, $0 \leq t \leq T-1$
+	\item Time complexity: $O(n^2T)$
+\end{itemize}
+
+\subsubsection{7.4.2 \ Backward computation -- smoothing}
+\begin{itemize}
+	\item $P(X_k | e_1, ..., e_t) \propto P(e_{k+1}, ..., e_t | X_k) P(X_k | e_1, ..., e_t)$ where $t > k$
+	\item Define: $\beta_k(i) = P(e_{k+1}, ..., e_t | X_k = s_i)$
+	\item Algorithm:\\
+	-- $\beta_T(i) = 1$, $1 \leq i \leq n$\\
+	-- $\beta_k(i) = \sum_{j=1}^n a_{ij} b_j(e_{k+1})\beta_{k+1}(j)$, $1 \leq j \leq n$, $0 \leq k \leq T-1$
+	\item Time complexity: $O(n^2T)$
+\end{itemize}
+
+\subsubsection{7.4.3 \ Viterbi algorithm -- most likely sequence}
+\begin{itemize}
+	\item Define: $\delta_t(i) = \max_{X_1, ..., X_{t-1}} P(X_1, ..., X_{t-1}, X_t=s_i, e_1, ..., e_t)$
+	\item Algorithm:\\
+	-- $\delta_0(i) = \pi(i)$, $1 \leq i \leq n$\\
+	-- $\delta_{t+1}(j) = \max_i \delta_t(i) a_{ij} b_j(e_{t+1})$, $1 \leq j \leq n$, $0 \leq t \leq T-1$\\
+	\item Time complexity: $O(n^2T)$
+\end{itemize}
+
+\subsubsection{7.4.4 \ Parameters estimation}
+\begin{itemize}
+	\item Paired sequences: $\hat{a}_{ij} = \frac{\# s_i \rightarrow s_j}{\# s_i}$ \& $\hat{b}_j(e_k) = \frac{\# s_j \rightarrow e_k}{\# s_j}$
+	\item Observation sequences only -- Baum-Welch EM:\\
+	-- Define: $\xi_t(i,j) = P(X_t=s_i, X_{t+1}=s_j | e_1, ..., e_T, \lambda)$\\
+	$\xi_t(i,j) = \frac{\alpha_t(i) a_{ij} b_j(e_{t+1}) \beta_{t+1}(j)}{\sum_{i=1}^n \sum_{j=1}^n \alpha_t(i) a_{ij} b_j(e_{t+1}) \beta_{t+1}(j)}$\\
+	-- Let $\gamma_t (i) = P(X_t=s_i | e_1, ..., e_T, \lambda) = \sum_{j=1}^n \xi_t(i,j)$\\
+	-- Estimate $\hat{\pi}_i = \gamma_1(i)$, $\hat{a}_{ij} = \frac{\sum_{t=1}^{T-1} \xi_t(i, j)}{\sum_{t=1}^{T-1} \gamma_t(i)}$, $\hat{b}_j(e_k) = \frac{\sum_{t=1}^T \gamma_t(j) * I(E_t=e_k)}{\sum_{t=1}^T \gamma_t(j)}$\\
+	-- Algorithm:\\
+	\ \ \ \ -- Guess $\lambda_0=[\pi_0, a_0, b_0]$\\
+	\ \ \ \ -- Repeat until convergence:\\
+	\ \ \ \ \ \ \ \ -- Calculate $\alpha, \beta$ from $\lambda$\\
+	\ \ \ \ \ \ \ \ -- Re-estimate $\lambda$ from $\alpha, \beta$
+\end{itemize}
+
+\section{8 \ Unsupervised learning}
+\subsection{8.1 \ Principal components analysis (PCA)}
+\begin{itemize}
+	\item Assume: data distrubution is unimodal Gaussian (fully explained by mean \& variance)
+	\item Assume: information to be preserved is in the variance
+	\item Project data $\mathbb{R}^d \rightarrow \mathbb{R}^k$ ($k < d$), maximizing variance.
+\end{itemize}
+
+\subsubsection{8.1.1 \ PCA method}
+\begin{itemize}
+	\item Zero-mean, unit variance transform on $\mathcal{D}$
+	\item Find  $S = $ covariance matrix of transformed $\mathcal{D}$
+	\item Find $\lambda_1, ..., \lambda_k$ (the $k$ largest eigenvalues of $S$) and associated eigenvectors $u_1, ..., u_k$
+	\item Project $x^{(i)} \mapsto [ u_1^T x^{(i)}, ..., u_k^T x^{(i)} ]^T$, where $x^{(i)} \in \mathbb{R}^d$
+\end{itemize}
+
+\subsubsection{8.1.2 \ Kernel PCA}
+\begin{itemize}
+	\item Idea: map $x^{(i)} \mapsto \phi(x^{(i)})$ where $\phi: \mathbb{R}^d \rightarrow \mathbb{R}^D$ ($D >> d$)
+	\item The result when project back to $\mathbb{R}^d$ will be nonlinear.
+	\item Algorithm:\\
+	-- Pick a kernel\\
+	-- Construct kernel matrix $K$ over data $x^{(1)}, ..., x^{(m)}$\\
+	-- Zero mean the kernel matrix $K$ to get $\tilde{K}$\\
+	-- Solve the eigenvalue problem $\tilde{K}\alpha = \lambda\alpha$, $\alpha \in \mathbb{R}^m$\\
+	-- For a new $x$, we project it as: $y_j = \sum_{i=1}^m \alpha_j^{(i)} \kappa (x, x^{(i)})$, for $j = 1, ..., L$ (\# of components) where eigenvectors are ordered by value
+\end{itemize}
+
+\subsection{8.2 \ Expectation maximization algorithm (EM)}
+\subsubsection{8.2.1 \ K-means}
+\begin{itemize}
+	\item Cost function: $J = \sum_{i=1}^m \sum_{k=1}^K z_k^{(i)} \| x^{(i)} - \mu_k \|^2$
+	\item E-step: cluster assignment, minimize $J$ wrt. $z$, fix $\mu$
+	\item M-step: relocate means, minimize $J$ wrt. $\mu$, fix $z$
+	\item Time complexity: $O(mK)$ per iteration
+	\item Converges to local minimum \& vulnerable to outliers.
+\end{itemize}
+
+\subsubsection{8.2.2 \ Gaussian mixture model (GMM)}
+\begin{itemize}
+	\item Generative mode: $P(x^{(i)}) = \sum_{k=1}^K P(z^{(i)} = k) P(x^{(i)} | z^{(i)} = k)$\\
+	$z^{(i)} \sim \mathrm{Multinomial}(\pi); \pi_k > 0, \sum_k \pi_k = 1$\\
+	$x^{(i)} |_{z^{(i)}=k} \sim \mathcal{N}(\mu_k, \Sigma_k)$
+	\item Infer $z^{(i)}$ for each $x^{(i)}$, where $\theta = \{\pi, \mu, \Sigma\}$:\\
+	$P(z^{(i)}=k | x^{(i)}; \theta) = \frac{P(z^{(i)}=k) P(x^{(i)} | z^{(i)}=k; \theta)}{\sum_{k'} P(z^{(i)}=k') P(x^{(i)} | z^{(i)}=k'; \theta)}$
+	\item Soft EM algorithm:\\
+	-- Guess values of $\theta = \{ \pi, \mu, \Sigma \}$\\
+	-- E-step: calculate the responsibility of each component toward generating $x^{(i)}$: $r_k^{(i)} = P(z^{(i)}=k | x^{(i)}; \theta)$\\
+	-- M-step: given $r_k^{(i)}$ and $x^{(i)}$, $1 \leq i \leq m$, $1 \leq k \leq K$, re-estimate $\pi, \mu, \Sigma$:\\
+	$\pi_k = \frac{1}{m} \sum_{i=1}^m r_k^{(i)}$, \ \ \ \ $\mu_k = \frac{\sum_{i=1}^m r_k^{(i)} x^{(i)}}{\sum_{i=1}^m r_k^{(i)}}$,\\ $\Sigma_k = \frac{\sum_{i=1}^m r_k^{(i)} (x^{(i)} - \mu_k) (x^{(i)} - \mu_k)^T}{\sum_{i=1}^m r_k^{(i)}}$
+\end{itemize}
+
+\section{9 \ Reinforcement learning}
+\subsection{9.1 \ Markov decision process (MDP)}
+\subsection{9.2 \ Model-based RL}
+\subsection{9.3 \ Model-free RL}
+\subsection{9.4 \ TD learning}
+\subsection{9.5 \ Q learning}
+
+\section{Appendix}
+\subsection{Distributions}
+\begin{itemize}
+	\item Poisson distribution PMF: $P(X=k) = \frac{\lambda^k e^{-\lambda}}{k!}$
+	\item Normal distribution PDF: $f(x; \mu, \sigma) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp{\left\{ -\frac{(x-\mu)^2}{2\sigma^2} \right\}}$
+	\item Multivariate normal distribution PDF: $f(X;\mu, \Sigma) = \frac{1}{\sqrt{(2\pi)^{k} |\Sigma|}} \exp{\left( -\frac{1}{2} (X - \mu)^T \Sigma^{-1} (X-\mu) \right)}$
+	\item Laplace distribution PDF: $f(x;\mu,b) = \frac{1}{2b} \exp{\left\{ -\frac{|x-\mu|}{b} \right\}}$
+	\item Beta distribution PDF: $f(x;\alpha, \beta) = \frac{1}{B(\alpha, \beta)} x^{\alpha-1} (1-x)^{\beta-1}$
+	
+	\item Given that $X_1 \sim Pois(\lambda_1), X_2 \sim Pois(\lambda_2)$, $X=X_1+X_2$, $X_1$ and $X_2$ are independent: $X \sim Pois(\lambda_1 + \lambda_2)$.
+	\item Given that $P(X_0=x_0) = \alpha_0 \exp{\left\{ -\frac{(x_0 - \mu_0)^2}{2\sigma_0^2} \right\}}$, and that $P(X_1=x_1 | X_0=x_0) = \alpha_1 \exp{\left\{ -\frac{(x_1 - x_0)^2}{2\sigma_1^2} \right\}}$: 
+	$P(X_1=x_1) = \alpha_0 \alpha_1 \sqrt{\frac{2 \pi \sigma_0^2 \sigma_1^2}{\sigma_0^2 + \sigma_1^2}} \exp{\left\{ -\frac{1}{2} \frac{(x_1 - \mu_0)^2}{\sigma_0^2 + \sigma_1^2} \right\}}$
+\end{itemize}
+
+\subsection{Information theory}
+\begin{itemize}
+	\item Conditional information: $H(Y | X) = \sum_{y \in Y} \sum_{x \in X} p(x, y) \log{\frac{p(x)}{p(x, y)}}$
+	\item Mutual information: $I(X; Y) = \sum_{y \in Y} \sum_{x \in X} p(x, y) \log{\frac{p(x, y)}{p(x)P(y)}}$
+	\item Kullback-Leibler (KL) divergence: $D_{KL} (p||q) = \sum_x p(x) \log{\frac{p(x)}{q(x)}}$
+	\item Cross entropy: $H(p,q) = E_p[- \log q] = H(p) + D_{KL}(p||q)$
+\end{itemize}
+
+\subsection{Convex function}
+\begin{itemize}
+	\item A function $f(x)$ is convex on a set $S$ iff for $\lambda \in [0,1]$, and $\forall x, y \in S$: $f(\lambda x + (1 - \lambda)y) \leq \lambda f(x) + (1 - \lambda)f(y)$.
+	\item A function $f(x)$ is convex on a set $S$ iff $\frac{\mathrm{d}^2}{\mathrm{d}x^2}f(x)$ is positive semidefinite everywhere in the set.
+\end{itemize}
+
+\subsection{Convergence of perceptron}
+\begin{proof}
+	Let $\theta^{(k-1)}$ be the parameter vector when the algorithm makes a mistake on $(x, y)$.
+	\begin{align*}
+		\theta^{(k)} = \theta^{(k-1)} + \eta x y
+	\end{align*}
+	Take dot product on both sides with $\theta^*$ (some separating hyperplane)
+	\begin{align*}
+		{\theta^*}^T \theta^{(k)} &= {\theta^*}^T (\theta^{(k-1)} + \eta x y)\\
+		&= {\theta^*}^T \theta^{(k-1)} + \eta y ({\theta^*}^T x)\\
+		&\geq {\theta^*}^T \theta^{(k-1)} + \eta \gamma
+	\end{align*}
+	If $\theta^{(0)}$ is all zeros vector, then
+	\begin{align}
+		{\theta^*}^T \theta^{(k)} \geq \eta k \gamma
+	\end{align}
+	From the update rule,
+	\begin{align*}
+		\theta^{(k)} &= \theta^{(k-1)}+ \eta x y\\
+		\| 	\theta^{(k)} \|^2 &= \| \theta^{(k-1)}+ \eta x y \|^2\\
+		&= \| \theta^{(k-1)} \|^2 + \eta^2 y^2 \|x\|^2 + 2 \eta y ({\theta^{(k)}}^T x)\\
+		&\leq \| \theta^{(k-1)} \|^2 + \eta^2 \|x\|^2\\
+		&\leq \| \theta^{(k-1)} \|^2 + \eta^2 R^2
+	\end{align*}
+	Starting with $\theta^{(0)}$ of all zeros,
+	\begin{align}
+		\| \theta^{(k-1)} \|^2 \leq k \eta^2 R^2
+	\end{align}
+	Putting (1) and (2) together, $k \leq \frac{R^2 \|\theta^*\|^2}{\gamma^2}$.
+\end{proof}
+
+\subsection{Mercer's theorem}
+\begin{proof}
+	Since $K$ is positive definite, $K = u^T \Lambda u$, where $\Lambda$ is a diagonal matrix with entries $\lambda^{(i)} > 0$.
+	Consider an element $\kappa(x^{(i)}, x^{(j)})$ of K. We can construct this element as follows
+	\begin{align*}
+		\kappa(x^{(i)}, x^{(j)}) = (\Lambda^{\frac{1}{2}} u_{:,i})^T (\Lambda^{\frac{1}{2}} u_{:,j})
+	\end{align*}
+	Now define $\phi(x^{(i)}) = \Lambda^{\frac{1}{2}} u_{:,i}$, then we have $\kappa(x^{(i)}, x^{(j)}) = \phi(x^{(i)})^T \phi(x^{(j)})$.
+\end{proof}
+
+\subsection{Adaboost principle}
+
+\subsection{Kernel PCA derivation}
+
+\subsection{Correctness of EM}
+\begin{proof}
+	For any $\mathbf{Z}$ with non-zero probability $p(\mathbf{Z}|\mathbf{X}, \boldsymbol\theta)$, we can write:
+	\begin{align*}
+		\log p(\mathbf{X}|\boldsymbol\theta) = \log p(\mathbf{X}, \mathbf{Z}|\boldsymbol\theta) - \log p(\mathbf{Z}|\mathbf{X}, \boldsymbol\theta)
+	\end{align*}
+	We take the expectation over possible values of the unknown data $\mathbf{Z}$ under the current parameter estimate $\boldsymbol\theta^{(t)}$ by multiplying both sides by $p(\mathbf{Z}|\mathbf{X},\boldsymbol\theta^{(t)})$ and summing over $\mathbf{Z}$. The left-hand side is the expectation of a constant, so we get:
+	\begin{align*}
+		 \log p(\mathbf{X}|\boldsymbol\theta) = &\sum_{\mathbf{Z}} p(\mathbf{Z}|\mathbf{X}, \boldsymbol\theta^{(t)}) \log p(\mathbf{X}, \mathbf{Z}|\boldsymbol\theta)\\
+		 &- \sum_{\mathbf{Z}} p(\mathbf{Z}|\mathbf{X}, \boldsymbol\theta^{(t)}) \log p(\mathbf{Z}|\mathbf{X}, \boldsymbol\theta)\\
+		 = &Q(\boldsymbol\theta | \boldsymbol\theta^{(t)}) + H(\boldsymbol\theta | \boldsymbol\theta^{(t)})
+	\end{align*}
+	where $H(\boldsymbol\theta|\boldsymbol\theta^{(t)})$ is defined by the negated sum it is replacing. This last equation holds for any value of $\boldsymbol\theta$ including $\boldsymbol\theta = \boldsymbol\theta^{(t)}$,
+	\begin{align*}
+		\log p(\mathbf{X}|\boldsymbol\theta^{(t)})
+		= Q(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)}) + H(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)})
+	\end{align*}
+	and subtracting this last equation from the previous equation gives
+	\begin{align*}
+		\log p(\mathbf{X}|\boldsymbol\theta) - \log p(\mathbf{X}|\boldsymbol\theta^{(t)})
+		= &Q(\boldsymbol\theta|\boldsymbol\theta^{(t)}) - Q(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)})\\
+		&+ H(\boldsymbol\theta|\boldsymbol\theta^{(t)}) - H(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)})
+	\end{align*}
+	However, Gibbs' inequality tells us that $H(\boldsymbol\theta|\boldsymbol\theta^{(t)}) \ge H(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)})$, so we can conclude that
+	\begin{align*}
+		\log p(\mathbf{X}|\boldsymbol\theta) - \log p(\mathbf{X}|\boldsymbol\theta^{(t)})
+		\ge Q(\boldsymbol\theta|\boldsymbol\theta^{(t)}) - Q(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)})
+	\end{align*}
+	In words, choosing $\boldsymbol\theta$ to improve $Q(\boldsymbol\theta|\boldsymbol\theta^{(t)})$ beyond $Q(\boldsymbol\theta^{(t)}|\boldsymbol\theta^{(t)})$ cannot cause $\log p(\mathbf{X}|\boldsymbol\theta)$ to decrease below $\log p(\mathbf{X}|\boldsymbol\theta^{(t)})$, and so the marginal likelihood of the data is non-decreasing.
+\end{proof}
+
+\end{multicols}
+\end{document}
+

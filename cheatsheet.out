@@ -1,0 +1,77 @@
+\BOOKMARK [1][-]{section*.1}{1 \040Linear models for regression}{}% 1
+\BOOKMARK [2][-]{section*.2}{1.1 \040Least squares regression}{section*.1}% 2
+\BOOKMARK [2][-]{section*.3}{1.2 \040L2-Regularization: ridge regression}{section*.1}% 3
+\BOOKMARK [2][-]{section*.4}{1.3 \040L1-Regularization: lasso regression}{section*.1}% 4
+\BOOKMARK [2][-]{section*.5}{1.4 \040Locally weighted linear regression}{section*.1}% 5
+\BOOKMARK [1][-]{section*.6}{2 \040Linear models for classification}{}% 6
+\BOOKMARK [2][-]{section*.7}{2.1 \040Discriminative models for classification}{section*.6}% 7
+\BOOKMARK [2][-]{section*.8}{2.2 \040Generative models for classification}{section*.6}% 8
+\BOOKMARK [3][-]{section*.9}{2.2.1 \040Gaussian discriminant analysis \(GDA\)}{section*.8}% 9
+\BOOKMARK [3][-]{section*.10}{2.2.2 \040Naive Bayes models}{section*.8}% 10
+\BOOKMARK [2][-]{section*.11}{2.3 \040Model criteria}{section*.6}% 11
+\BOOKMARK [2][-]{section*.12}{2.4 \040Multiclass classification}{section*.6}% 12
+\BOOKMARK [3][-]{section*.13}{2.4.1 \040One vs. All \(OVA\) \046 One vs. One \(OVO\)}{section*.12}% 13
+\BOOKMARK [3][-]{section*.14}{2.4.2 \040Softmax}{section*.12}% 14
+\BOOKMARK [1][-]{section*.15}{3 \040Kernel methods}{}% 15
+\BOOKMARK [2][-]{section*.16}{3.1 \040Kernel functions}{section*.15}% 16
+\BOOKMARK [2][-]{section*.17}{3.2 \040Perceptron}{section*.15}% 17
+\BOOKMARK [2][-]{section*.18}{3.3 \040Support vector machine \(SVM\)}{section*.15}% 18
+\BOOKMARK [3][-]{section*.19}{3.3.1 \040Maximize margin}{section*.18}% 19
+\BOOKMARK [3][-]{section*.20}{3.3.2 \040Non-separable case}{section*.18}% 20
+\BOOKMARK [3][-]{section*.21}{3.3.3 \040Hinge loss \205 another view of SVM}{section*.18}% 21
+\BOOKMARK [3][-]{section*.22}{3.3.4 \040Multiclass SVM}{section*.18}% 22
+\BOOKMARK [3][-]{section*.23}{3.3.5 \040SVM for regression}{section*.18}% 23
+\BOOKMARK [1][-]{section*.24}{4 \040Neural Networks}{}% 24
+\BOOKMARK [2][-]{section*.25}{4.1 \040Activation functions}{section*.24}% 25
+\BOOKMARK [2][-]{section*.26}{4.2 \040Backpropagation}{section*.24}% 26
+\BOOKMARK [2][-]{section*.27}{4.3 \040Convolutional neural networks}{section*.24}% 27
+\BOOKMARK [2][-]{section*.28}{4.4 \040Optimization for training deep models}{section*.24}% 28
+\BOOKMARK [2][-]{section*.29}{4.4.1 \040Momentum}{section*.24}% 29
+\BOOKMARK [2][-]{section*.30}{4.4.2 \040Nesterov momentum}{section*.24}% 30
+\BOOKMARK [2][-]{section*.31}{4.4.3 \040AdaGrad}{section*.24}% 31
+\BOOKMARK [2][-]{section*.32}{4.4.4 \040RMSprop}{section*.24}% 32
+\BOOKMARK [2][-]{section*.33}{4.4.5 \040Adam \(adaptive moments\)}{section*.24}% 33
+\BOOKMARK [1][-]{section*.34}{5 \040Decision trees}{}% 34
+\BOOKMARK [2][-]{section*.35}{5.1 \040Cost functions}{section*.34}% 35
+\BOOKMARK [2][-]{section*.36}{5.2 \040Decision tree for regression}{section*.34}% 36
+\BOOKMARK [2][-]{section*.37}{5.3 \040Node is not worth splitting when}{section*.34}% 37
+\BOOKMARK [2][-]{section*.38}{5.4 \040Avoid overfitting}{section*.34}% 38
+\BOOKMARK [1][-]{section*.39}{6 \040Ensembles}{}% 39
+\BOOKMARK [2][-]{section*.40}{6.1 \040Bagging}{section*.39}% 40
+\BOOKMARK [2][-]{section*.41}{6.2 \040Boosting}{section*.39}% 41
+\BOOKMARK [2][-]{section*.42}{6.3 \040Gradient boosting}{section*.39}% 42
+\BOOKMARK [3][-]{section*.43}{6.3.1 \040Gradient boosting for regression}{section*.42}% 43
+\BOOKMARK [3][-]{section*.44}{6.3.1 \040Gradient boosting for classification}{section*.42}% 44
+\BOOKMARK [1][-]{section*.45}{7 \040Probabilistic graphical models}{}% 45
+\BOOKMARK [2][-]{section*.46}{7.1 \040Directed models \205 Bayesian network}{section*.45}% 46
+\BOOKMARK [2][-]{section*.47}{7.2 \040Undirected models \205 Markov network}{section*.45}% 47
+\BOOKMARK [2][-]{section*.48}{7.3 \040Sampling}{section*.45}% 48
+\BOOKMARK [3][-]{section*.49}{7.3.1 \040Ancestral sampling}{section*.48}% 49
+\BOOKMARK [3][-]{section*.50}{7.3.2 \040Gibbs sampling}{section*.48}% 50
+\BOOKMARK [2][-]{section*.51}{7.4 \040Hidden Markov models}{section*.45}% 51
+\BOOKMARK [3][-]{section*.52}{7.4.1 \040Forward computation \205 filtering}{section*.51}% 52
+\BOOKMARK [3][-]{section*.53}{7.4.2 \040Backward computation \205 smoothing}{section*.51}% 53
+\BOOKMARK [3][-]{section*.54}{7.4.3 \040Viterbi algorithm \205 most likely sequence}{section*.51}% 54
+\BOOKMARK [3][-]{section*.55}{7.4.4 \040Parameters estimation}{section*.51}% 55
+\BOOKMARK [1][-]{section*.56}{8 \040Unsupervised learning}{}% 56
+\BOOKMARK [2][-]{section*.57}{8.1 \040Principal components analysis \(PCA\)}{section*.56}% 57
+\BOOKMARK [3][-]{section*.58}{8.1.1 \040PCA method}{section*.57}% 58
+\BOOKMARK [3][-]{section*.59}{8.1.2 \040Kernel PCA}{section*.57}% 59
+\BOOKMARK [2][-]{section*.60}{8.2 \040Expectation maximization algorithm \(EM\)}{section*.56}% 60
+\BOOKMARK [3][-]{section*.61}{8.2.1 \040K-means}{section*.60}% 61
+\BOOKMARK [3][-]{section*.62}{8.2.2 \040Gaussian mixture model \(GMM\)}{section*.60}% 62
+\BOOKMARK [1][-]{section*.63}{9 \040Reinforcement learning}{}% 63
+\BOOKMARK [2][-]{section*.64}{9.1 \040Markov decision process \(MDP\)}{section*.63}% 64
+\BOOKMARK [2][-]{section*.65}{9.2 \040Model-based RL}{section*.63}% 65
+\BOOKMARK [2][-]{section*.66}{9.3 \040Model-free RL}{section*.63}% 66
+\BOOKMARK [2][-]{section*.67}{9.4 \040TD learning}{section*.63}% 67
+\BOOKMARK [2][-]{section*.68}{9.5 \040Q learning}{section*.63}% 68
+\BOOKMARK [1][-]{section*.69}{Appendix}{}% 69
+\BOOKMARK [2][-]{section*.70}{Distributions}{section*.69}% 70
+\BOOKMARK [2][-]{section*.71}{Information theory}{section*.69}% 71
+\BOOKMARK [2][-]{section*.72}{Convex function}{section*.69}% 72
+\BOOKMARK [2][-]{section*.73}{Convergence of perceptron}{section*.69}% 73
+\BOOKMARK [2][-]{section*.74}{Mercer's theorem}{section*.69}% 74
+\BOOKMARK [2][-]{section*.75}{Adaboost principle}{section*.69}% 75
+\BOOKMARK [2][-]{section*.76}{Kernel PCA derivation}{section*.69}% 76
+\BOOKMARK [2][-]{section*.77}{Correctness of EM}{section*.69}% 77
