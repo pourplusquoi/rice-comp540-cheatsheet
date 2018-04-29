@@ -52,7 +52,7 @@
 \BOOKMARK [3][-]{section*.52}{7.4.1 \040Forward computation \205 filtering}{section*.51}% 52
 \BOOKMARK [3][-]{section*.53}{7.4.2 \040Backward computation \205 smoothing}{section*.51}% 53
 \BOOKMARK [3][-]{section*.54}{7.4.3 \040Viterbi algorithm \205 most likely sequence}{section*.51}% 54
-\BOOKMARK [3][-]{section*.55}{7.4.4 \040Parameters estimation}{section*.51}% 55
+\BOOKMARK [3][-]{section*.55}{7.4.4 \040Parameter estimation}{section*.51}% 55
 \BOOKMARK [1][-]{section*.56}{8 \040Unsupervised learning}{}% 56
 \BOOKMARK [2][-]{section*.57}{8.1 \040Principal components analysis \(PCA\)}{section*.56}% 57
 \BOOKMARK [3][-]{section*.58}{8.1.1 \040PCA method}{section*.57}% 58
@@ -66,16 +66,19 @@
 \BOOKMARK [3][-]{section*.66}{9.1.2 \040The value function \205 expected utility}{section*.64}% 66
 \BOOKMARK [3][-]{section*.67}{9.1.3 \040Policy evaluation}{section*.64}% 67
 \BOOKMARK [3][-]{section*.68}{9.1.4 \040Optimality}{section*.64}% 68
-\BOOKMARK [2][-]{section*.69}{9.2 \040Model-based RL}{section*.63}% 69
-\BOOKMARK [2][-]{section*.70}{9.3 \040Model-free RL}{section*.63}% 70
-\BOOKMARK [2][-]{section*.71}{9.4 \040TD learning}{section*.63}% 71
-\BOOKMARK [2][-]{section*.72}{9.5 \040Q learning}{section*.63}% 72
-\BOOKMARK [1][-]{section*.73}{Appendix}{}% 73
-\BOOKMARK [2][-]{section*.74}{Distributions}{section*.73}% 74
-\BOOKMARK [2][-]{section*.75}{Information theory}{section*.73}% 75
-\BOOKMARK [2][-]{section*.76}{Convex function}{section*.73}% 76
-\BOOKMARK [2][-]{section*.77}{Convergence of perceptron}{section*.73}% 77
-\BOOKMARK [2][-]{section*.78}{Mercer's theorem}{section*.73}% 78
-\BOOKMARK [2][-]{section*.79}{Adaboost principle}{section*.73}% 79
-\BOOKMARK [2][-]{section*.80}{Kernel PCA derivation}{section*.73}% 80
-\BOOKMARK [2][-]{section*.81}{Correctness of EM}{section*.73}% 81
+\BOOKMARK [2][-]{section*.69}{9.2 \040Solving MDPs}{section*.63}% 69
+\BOOKMARK [3][-]{section*.70}{9.2.1 \040Policy iteration}{section*.69}% 70
+\BOOKMARK [3][-]{section*.71}{9.2.2 \040Value iteration}{section*.69}% 71
+\BOOKMARK [2][-]{section*.72}{9.3 \040Model-based RL}{section*.63}% 72
+\BOOKMARK [2][-]{section*.73}{9.4 \040Model-free RL}{section*.63}% 73
+\BOOKMARK [2][-]{section*.74}{9.5 \040TD learning}{section*.63}% 74
+\BOOKMARK [2][-]{section*.75}{9.6 \040Q learning}{section*.63}% 75
+\BOOKMARK [1][-]{section*.76}{Appendix}{}% 76
+\BOOKMARK [2][-]{section*.77}{Distributions}{section*.76}% 77
+\BOOKMARK [2][-]{section*.78}{Information theory}{section*.76}% 78
+\BOOKMARK [2][-]{section*.79}{Convex function}{section*.76}% 79
+\BOOKMARK [2][-]{section*.80}{Convergence of perceptron}{section*.76}% 80
+\BOOKMARK [2][-]{section*.81}{Mercer's theorem}{section*.76}% 81
+\BOOKMARK [2][-]{section*.82}{Adaboost principle}{section*.76}% 82
+\BOOKMARK [2][-]{section*.83}{Kernel PCA derivation}{section*.76}% 83
+\BOOKMARK [2][-]{section*.84}{Correctness of EM}{section*.76}% 84

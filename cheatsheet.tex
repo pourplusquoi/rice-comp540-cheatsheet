@@ -476,7 +476,7 @@
 	\item Time complexity: $O(n^2T)$
 \end{itemize}
 
-\subsubsection{7.4.4 \ Parameters estimation}
+\subsubsection{7.4.4 \ Parameter estimation}
 \begin{itemize}
 	\item Paired sequences: $\hat{a}_{ij} = \frac{\# s_i \rightarrow s_j}{\# s_i}$ \& $\hat{b}_j(e_k) = \frac{\# s_j \rightarrow e_k}{\# s_j}$
 	\item Observation sequences only -- Baum-Welch EM:\\
@@ -548,7 +548,7 @@
 \subsubsection{9.1.1 \ The model}
 \begin{itemize}
 	\item A set of states $S$, a subset of which are terminal states.
-	\item $Action(s)$: possible actions from state $s$, no actions from terminal states.
+	\item $\mathrm{Actions}(s)$: possible actions from state $s$, no actions from terminal states.
 	\item A transition function $T(s,a,s')$: probability of transitioning to state $s'$ if action $a$ is taken in state $s$.
 	\item A reward function $r(s,a,s')$: reward for taking action $a$ in state $s$ and ending up in state $s'$, or $r(s,a)$ or $r(s)$.
 \end{itemize}
@@ -566,15 +566,44 @@
 	\item Approach 2: (iterative improvement) $O(|S|)$ each iteration\\
 	-- Repeat until convergence:\\
 	\ \ \ \ -- For each state $s$:\\
-	\ \ \ \ \ \ \ \ -- $V_\pi^{i}(s) = \sum_{s'} T(s, \pi(s), s') \left[ r(s, \pi(s), s') + V_\pi^{i-1}(s') \right]$
+	\ \ \ \ \ \ \ \ -- $V_\pi^{i}(s) \leftarrow \sum_{s'} T(s, \pi(s), s') \left[ r(s, \pi(s), s') + V_\pi^{i-1}(s') \right]$
 \end{itemize}
 
 \subsubsection{9.1.4 \ Optimality}
+\begin{itemize}
+	\item Definition: $V*(s) = V_{\pi^*}(s) = \max_{\pi}V_{\pi}(s)$
+	\item Bellman's equation: $V^*(s) = \max_{a \in \mathrm{Actions}(s)} T(s, a, s') \left[ r(s, a, s') + V^*(s') \right]$
+	\item Given $V^*$: $Q^*(s,a) = \sum_{s'}T(s,a,s')\left[ r(s,a,s') + V^*(s) \right]$
+	\item Given $Q^*$: $V^*(s) = \max_{a \in \mathrm{Action}(s)} Q^*(s,a)$
+\end{itemize}
 
-\subsection{9.2 \ Model-based RL}
-\subsection{9.3 \ Model-free RL}
-\subsection{9.4 \ TD learning}
-\subsection{9.5 \ Q learning}
+\subsection{9.2 \ Solving MDPs}
+\subsubsection{9.2.1 \ Policy iteration}
+\begin{itemize}
+	\item Policy improvement:\\
+	-- Compute $Q_{\pi}(s,a)$ from $V_{\pi}(s)$\\
+	-- Update $\pi$: $\pi'(s) = \arg\max_{a \in \mathrm{Action}(s)} Q(s,a)$
+	\item Policy iteration algorithm:\\
+	-- Start with a random policy $\pi$\\
+	-- Repeat until no change to policy occurs:\\
+	\ \ \ \ -- Compute value of policy $\pi$ (policy evaluation)\\
+	\ \ \ \ -- Improve the policy at each state (policy improvement)
+\end{itemize}
+
+\subsubsection{9.2.2 \ Value iteration}
+\begin{itemize}
+	\item Note: no explicit policy.
+	\item Value iteration algorithm:\\
+	-- Start with $V^{(0)}(s) = 0$ for all states $s$ in $S$\\
+	-- Repeat until convergence:\\
+	\ \ \ \ -- Bellman update: $V^{i}(s) \leftarrow$\\
+	\ \ \ \ \ \ $\max_{a \in \mathrm{Action}(s)} \sum_{s'} T(s, a, s') \left[ r(s, a, s') + V^{i-1}(s') \right]$\\
+\end{itemize}
+
+\subsection{9.3 \ Model-based RL}
+\subsection{9.4 \ Model-free RL}
+\subsection{9.5 \ TD learning}
+\subsection{9.6 \ Q learning}
 
 \section{Appendix}
 \subsection{Distributions}
