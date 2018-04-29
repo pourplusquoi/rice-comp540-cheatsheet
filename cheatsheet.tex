@@ -25,6 +25,7 @@
 % http://en.wikibooks.org/wiki/LaTeX
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Copyright (C) 2018 Yang Pan
 
 \documentclass[9pt,landscape]{article}
 \usepackage{amssymb,amsmath,amsthm,amsfonts}
@@ -89,14 +90,14 @@
 	\item $\equiv$ MLE on $\theta$ with normal distributed error $\epsilon$.
 \end{itemize}
 
-\subsection{1.2 \ L2-Regularization: ridge regression}
+\subsection{1.2 \ L2-regularization: ridge regression}
 \begin{itemize}
 	\item Loss function: $J(\theta) = \frac{1}{2m} \sum_{i=1}^m (y^{(i)} - h_{\theta}(x^{(i)}))^2 + \frac{\lambda}{2m} \sum_{j = 1}^d \theta_j^2$
 	\item Closed form solutionn: $\hat{\theta} = (X^T X + \lambda I)^{-1} X^T y$
 	\item $\equiv$ MAP on $\theta$ with prior: $\theta \sim \mathcal{N}(0, \alpha^2 I)$, with $\frac{\lambda}{m} = \frac{\sigma^2}{\alpha^2}$.
 \end{itemize}
 
-\subsection{1.3 \ L1-Regularization: lasso regression}
+\subsection{1.3 \ L1-regularization: lasso regression}
 \begin{itemize}
 	\item Loss function: $J(\theta) = \frac{1}{2m} \sum_{i=1}^m (y^{(i)} - h_{\theta}(x^{(i)}))^2 + \frac{\lambda}{2m} \sum_{j = 1}^d |\theta_j|$
 	\item $\equiv$ MAP on $\theta$ with prior: $\theta_j \sim Laplace(0, \alpha), \forall j$
@@ -239,7 +240,7 @@
 	\item $sigmoid(x) = \sigma(x) = \frac{1}{1 + \exp{(-x)}}$\\
 	$\frac{\mathrm{d}}{\mathrm{d} x} \sigma(x) = \sigma(x)(1-\sigma(x))$
 	\item $\tanh(x) = \frac{\exp{(x)} - \exp{(-x)}}{\exp{(x)} + \exp{(-x)}}$ (\textit{unbias, better than sigmoid})
-	\item $ReLU(x) = \max(0, x)$
+	\item $\mathrm{ReLU}(x) = \max(0, x)$
 	\item Softmax function: $g(z_i) = \frac{\exp{(z_i)}}{\sum_j \exp{(z_j)}}$ (\textit{output layer})
 \end{itemize}
 
@@ -544,6 +545,32 @@
 
 \section{9 \ Reinforcement learning}
 \subsection{9.1 \ Markov decision process (MDP)}
+\subsubsection{9.1.1 \ The model}
+\begin{itemize}
+	\item A set of states $S$, a subset of which are terminal states.
+	\item $Action(s)$: possible actions from state $s$, no actions from terminal states.
+	\item A transition function $T(s,a,s')$: probability of transitioning to state $s'$ if action $a$ is taken in state $s$.
+	\item A reward function $r(s,a,s')$: reward for taking action $a$ in state $s$ and ending up in state $s'$, or $r(s,a)$ or $r(s)$.
+\end{itemize}
+
+\subsubsection{9.1.2 \ The value function -- \textit{expected utility}}
+\begin{itemize}
+	\item Definition: $V_\pi(s) = E \left[ \sum_{t=0}^\infty r(s_t, \pi(s_t)) | \pi, s_0=s \right]$
+	\item Recursive: $V_\pi(s) = \sum_{s'} T(s, \pi(s), s') \left[ r(s, \pi(s), s') + V_\pi(s') \right]$
+	\item Q-function: $Q_\pi(s,a) = \sum_{s'} T(s, a, s') \left[ r(s, a, s') + V_\pi(s') \right]$
+\end{itemize}
+
+\subsubsection{9.1.3 \ Policy evaluation}
+\begin{itemize}
+	\item Approach 1: set up linear equations and solve for $V_\pi$
+	\item Approach 2: (iterative improvement) $O(|S|)$ each iteration\\
+	-- Repeat until convergence:\\
+	\ \ \ \ -- For each state $s$:\\
+	\ \ \ \ \ \ \ \ -- $V_\pi^{i}(s) = \sum_{s'} T(s, \pi(s), s') \left[ r(s, \pi(s), s') + V_\pi^{i-1}(s') \right]$
+\end{itemize}
+
+\subsubsection{9.1.4 \ Optimality}
+
 \subsection{9.2 \ Model-based RL}
 \subsection{9.3 \ Model-free RL}
 \subsection{9.4 \ TD learning}
