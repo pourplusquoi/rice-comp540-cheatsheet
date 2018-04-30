@@ -453,7 +453,7 @@
 	\item Define: $\alpha_t(i) = P(e_1, ..., e_t, X_t = s_i)$
 	\item Algorithm:\\
 	-- $\alpha_0(i) = \pi_i$, $1 \leq i \leq n$ where $|S| = n$\\
-	-- $\alpha_{t+1}(i) = b_j(e_{t+1})\sum_{i=1}^n \alpha_t(i) a_{ij}$, $1 \leq j \leq n$, $0 \leq t \leq T-1$
+	-- $\alpha_{t+1}(i) = b_i(e_{t+1})\sum_{j=1}^n \alpha_t(j) a_{ji}$, $1 \leq j \leq n$, $0 \leq t \leq T-1$
 	\item Time complexity: $O(n^2T)$
 \end{itemize}
 
@@ -718,7 +718,7 @@
 		&= \sum_{i \in \mathrm{correct}} w_l^{(i)} \exp{\left( -\alpha^{(l)} \right)} + \sum_{i \in \mathrm{incorrect}} w_l^{(i)} \exp{\left( +\alpha^{(l)} \right)}\\
 		&= \left[ \exp{\left( \alpha^{(l)} \right)} - \exp{\left( -\alpha^{(l)} \right)} \right] A + \exp{\left( -\alpha^{(l)} \right)} B
 	\end{align*}
-	where we define $B = \sum_{i=1}^m w_l^{(i)}$, $A = \sum_{i=1}^m w_l^{(i)} I \left[ y^{(i)} \neq h^{(l)}(x^{(i)}) \right]$, and $\epsilon^{(l)} = \frac{A}{B}$. Setting $\frac{\partial J}{\partial \alpha^{(l)}} = 0$ yields
+	where we define $A = \sum_{i=1}^m w_l^{(i)} I \left[ y^{(i)} \neq h^{(l)}(x^{(i)}) \right]$, $B = \sum_{i=1}^m w_l^{(i)}$, and $\epsilon^{(l)} = \frac{A}{B}$. Setting $\frac{\partial J}{\partial \alpha^{(l)}} = 0$ yields
 	\begin{align*}
 		\alpha^{(l)} = \frac{1}{2}\log{ \left[ \frac{1 - \epsilon^{(l)}}{\epsilon^{(l)}} \right] }
 	\end{align*}
