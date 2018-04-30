@@ -27,7 +27,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Copyright (C) 2018 Yang Pan
 
-\documentclass[9pt,landscape]{article}
+\documentclass[8pt,landscape]{article}
 \usepackage{amssymb,amsmath,amsthm,amsfonts}
 \usepackage{multicol,multirow}
 \usepackage{calc}
@@ -597,13 +597,39 @@
 	-- Start with $V^{(0)}(s) = 0$ for all states $s$ in $S$\\
 	-- Repeat until convergence:\\
 	\ \ \ \ -- Bellman update: $V^{i}(s) \leftarrow$\\
-	\ \ \ \ \ \ $\max_{a \in \mathrm{Action}(s)} \sum_{s'} T(s, a, s') \left[ r(s, a, s') + V^{i-1}(s') \right]$\\
+	\ \ \ \ \ \ $\max_{a \in \mathrm{Action}(s)} \sum_{s'} T(s, a, s') \left[ r(s, a, s') + V^{i-1}(s') \right]$
 \end{itemize}
 
 \subsection{9.3 \ Model-based RL}
+\begin{itemize}
+	\item Training phase to get $T$ (count and normalize) and $R$ (maintain running average) estimates.
+	\item Solve using value or policy iteration.
+\end{itemize}
+
 \subsection{9.4 \ Model-free RL}
-\subsection{9.5 \ TD learning}
-\subsection{9.6 \ Q learning}
+\subsubsection{9.4.1 \ Passive temporal difference learning}
+\begin{itemize}
+	\item Learn from every experience $(s,a,s',r)$.
+	\item Update: $V_{\pi}(s) \leftarrow (1 - \alpha) V_{\pi}(s) + \alpha (r + \gamma V_{\pi}(s'))$
+	\item Update: $Q_{\pi}(s,a) \leftarrow (1 - \alpha) Q_{\pi}(s,a) + \alpha (r + \gamma Q_{\pi}(s', \pi(s')))$
+\end{itemize}
+
+\subsubsection{9.4.2 \ Q-learning}
+\begin{itemize}
+	\item Off-policy learning.
+	\item Active temporal difference learning on Q-function.
+	\item Update: $Q(s,a) \leftarrow (1 - \alpha) Q(s,a) + \alpha (r + \gamma \max_{a'} Q(s', a'))$
+\end{itemize}
+
+\subsubsection{9.4.3 \ Generalization}
+\begin{itemize}
+	\item Linear value functions: $V(s) = \sum_{i=1}^n w_i f_i(s)$ and $Q(s,a) = \sum_{i=1}^n w_i f_i(s,a)$
+	\item Q-learning with linear Q-functions:\\
+	-- Given transition $(s,a,s',r)$\\
+	-- Calculate difference: $\Delta = \left[ r + \gamma \max_{a'} Q(s', a') \right] - Q(s, a)$\\
+	-- For $i$ in $\{ 1, 2, ..., n \}$:\\
+	\ \ \ \ -- Update: $w_i \leftarrow w_i + \alpha \Delta f_i(s, a)$
+\end{itemize}
 
 \section{Appendix}
 \subsection{Distributions}
@@ -675,8 +701,96 @@
 \end{proof}
 
 \subsection{Adaboost principle}
+\begin{proof}
+	Boosting can be viewed as sequential minimization of an exponential cost function:
+	\begin{align*}
+		J &= \sum_{i=1}^m \exp{\left[ -y^{(i)} H_l(x^{(i)}) \right]}\\
+		H_l(x) &= \sum_{j=1}^l \alpha^{(j)} h^{(j)}(x)
+	\end{align*}
+	We sequentially minimize $J$ w.r.t. $\alpha^{(j)}$ and $h^{(j)}$ while holding $\alpha^{(1)}, ..., \alpha^{(j-1)}$ and $h^{(1)}, ..., h^{(j-1)}$ fixed. Rewrite $J$ as follows.
+	\begin{align*}
+		J = \sum_{i=1}^m \left\{ \exp{\left[ -y^{(i)} H_{l-1}(x^{(i)}) \right]} \exp{\left[ -\alpha^{(l)} y^{(i)} h^{(l)}(x^{(i)}) \right]} \right\}
+	\end{align*}
+	Now define $w_l^{(i)} = \exp{\left[ -y^{(i)} H_{l-1}(x^{(i)}) \right]}$, then
+	\begin{align*}
+		J &= \sum_{i=1}^m w_l^{(i)} \exp{\left[ -\alpha^{(l)} y^{(i)} h^{(l)}(x^{(i)}) \right]}\\
+		&= \sum_{i \in \mathrm{correct}} w_l^{(i)} \exp{\left( -\alpha^{(l)} \right)} + \sum_{i \in \mathrm{incorrect}} w_l^{(i)} \exp{\left( +\alpha^{(l)} \right)}\\
+		&= \left[ \exp{\left( \alpha^{(l)} \right)} - \exp{\left( -\alpha^{(l)} \right)} \right] A + \exp{\left( -\alpha^{(l)} \right)} B
+	\end{align*}
+	where we define $B = \sum_{i=1}^m w_l^{(i)}$, $A = \sum_{i=1}^m w_l^{(i)} I \left[ y^{(i)} \neq h^{(l)}(x^{(i)}) \right]$, and $\epsilon^{(l)} = \frac{A}{B}$. Setting $\frac{\partial J}{\partial \alpha^{(l)}} = 0$ yields
+	\begin{align*}
+		\alpha^{(l)} = \frac{1}{2}\log{ \left[ \frac{1 - \epsilon^{(l)}}{\epsilon^{(l)}} \right] }
+	\end{align*}
+	To find best $h^{(l)}$, $B$ is a constant, simply minimize $A$. Once we have $\alpha^{(l)}$ and $h^{(l)}$,
+	\begin{align*}
+		w_{l+1}^{(i)} = w_l^{(i)} \exp{ \left[ -y^{(i)} \alpha^{(l)} h^{(l)}(x^{(i)}) \right] }
+	\end{align*}
+	Therefore, we get
+	\begin{align*}
+		w_{l+1}^{(i)} = \left\{
+		\begin{aligned}
+			&w_l^{(i)} \exp{\left( -\alpha^{(l)} \right)}, \ \ \mathrm{correct \ classification}\\
+			&w_l^{(i)} \exp{\left( +\alpha^{(l)} \right)}, \ \ \mathrm{incorrect \ classification}
+		\end{aligned}
+		\right.
+	\end{align*}
+\end{proof}
 
 \subsection{Kernel PCA derivation}
+\begin{proof}
+	First the eigenvectors of covariance matrix lie in the span of the data $\left\{ x^{(1)}, ..., x^{(m)} \right\}$.
+	\begin{align*}
+		Sv = \left[ \frac{1}{m} \sum_{i=1}^m x^{(i)}{x^{(i)}}^T \right]v = \lambda v
+	\end{align*}
+	Use the fact that $x^{(i)} {x^{(i)}}^T v = \langle x^{(i)}, v \rangle x^{(i)}$ where $x^{(i)}, v \in \mathbb{R}^d$,
+	\begin{align*}
+		&\frac{1}{m} \sum_{i=1}^m \langle x^{(i)}, v \rangle x^{(i)} = \lambda v\\
+		\Leftrightarrow \ \ \ \ &v = \frac{1}{m \lambda} \sum_{i=1}^m \langle x^{(i)}, v \rangle x^{(i)}
+	\end{align*}
+	Define $\alpha^{(i)} = \frac{1}{m \lambda} \langle x^{(i)}, v \rangle$, then $v = \sum_{i=1}^m \alpha^{(i)} x^{(i)}$. Now project $x \in \mathbb{R}^d$ using $\phi: \mathbb{R}^d \rightarrow \mathbb{R}^D$ into a higher dimensional space. The covariance matrix $C$ of the transformed data is
+	\begin{align}
+		C = \frac{1}{m} \sum_{i=1}^m \phi(x^{(i)}) \phi(x^{(i)})^T
+	\end{align}
+	and we need to solve
+	\begin{align}
+		Cv = \lambda v
+	\end{align}
+	We just showed that
+	\begin{align}
+		v = \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)})
+	\end{align}
+	Substitute (4) and (5) into (3) getting
+	\begin{align*}
+		\left[ \frac{1}{m} \sum_{i=1}^m \phi(x^{(i)}) \phi(x^{(i)})^T \right] \left[ \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)}) \right] = \lambda \left[ \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)}) \right]
+	\end{align*}
+	Rearrange terms on the left hand side,
+	\begin{align*}
+		&\frac{1}{m} \sum_{i=1}^m \sum_{j=1}^m \alpha^{(j)} \phi(x^{(i)}) \left[ {\phi(x^{(i)})}^T \phi(x^{(j)}) \right]\\
+		=&\frac{1}{m} \sum_{i=1}^m \sum_{j=1}^m \alpha^{(j)} \phi(x^{(i)}) \kappa(x^{(i)}, x^{(j)})
+	\end{align*}
+	Therefore,
+	\begin{align*}
+		\sum_{i=1}^m \sum_{j=1}^m \alpha^{(j)} \phi(x^{(i)}) \kappa(\alpha^{(i)}, \alpha^{(j)}) = m \lambda \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)})
+	\end{align*}
+	Take dot product on both sides with $\phi(x^{(k)})$ getting
+	\begin{align*}
+		\sum_{i=1}^m \sum_{j=1}^m \alpha^{(j)} \kappa(x^{(k)}, x^{(i)}) \kappa(\alpha^{(i)}, \alpha^{(j)}) = m \lambda \sum_{i=1}^m \alpha^{(i)} \kappa(x^{(k)}, x^{(i)})
+	\end{align*}
+	Switch to matrix form
+	\begin{align*}
+		K^2 \alpha &= m \lambda K \alpha\\
+		\Leftrightarrow \ \ \ \ K \alpha &= m \lambda \alpha
+	\end{align*}
+	Also, the condition that $v^Tv = 1$ allows us to derive $\alpha^T K \alpha = 1$. By multiplying $K \alpha = m \lambda \alpha$ on both sides by $\alpha$, we get
+	\begin{align*}
+		m \lambda \alpha^T \alpha = 1
+	\end{align*}
+	For a new point $x$, its projection will be
+	\begin{align*}
+		\phi(x)^T v &= \sum_{i=1}^m \alpha^{(i)} \phi(x)^T \phi(x^{(i)})\\
+		&= \sum_{i=1}^m \alpha^{(i)} \kappa (x, x^{(i)})
+	\end{align*}
+\end{proof}
 
 \subsection{Correctness of EM}
 \begin{proof}
