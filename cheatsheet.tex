@@ -514,7 +514,8 @@
 	\item Algorithm:\\
 	-- Pick a kernel\\
 	-- Construct kernel matrix $K$ over data $x^{(1)}, ..., x^{(m)}$\\
-	-- Zero mean the kernel matrix $K$ to get $\tilde{K}$\\
+	-- Centralize the kernel matrix $K$ to get $\tilde{K}$, where $\mathbf{1}_m$ denotes a $m$-by-$m$ matrix for which each element takes value $1/m$:\\
+	$\tilde{K}=K - \mathbf{1}_m K - K \mathbf{1}_m + \mathbf{1}_m K \mathbf{1}_m$\\
 	-- Solve the eigenvalue problem $\tilde{K}\alpha = \lambda\alpha$, $\alpha \in \mathbb{R}^m$\\
 	-- For a new $x$, we project it as: $y_j = \sum_{i=1}^m \alpha_j^{(i)} \kappa (x, x^{(i)})$, for $j = 1, ..., L$ (\# of components) where eigenvectors are ordered by value
 \end{itemize}
@@ -747,7 +748,7 @@
 		&\frac{1}{m} \sum_{i=1}^m \langle x^{(i)}, v \rangle x^{(i)} = \lambda v\\
 		\Leftrightarrow \ \ \ \ &v = \frac{1}{m \lambda} \sum_{i=1}^m \langle x^{(i)}, v \rangle x^{(i)}
 	\end{align*}
-	Define $\alpha^{(i)} = \frac{1}{m \lambda} \langle x^{(i)}, v \rangle$, then $v = \sum_{i=1}^m \alpha^{(i)} x^{(i)}$. Now project $x \in \mathbb{R}^d$ using $\phi: \mathbb{R}^d \rightarrow \mathbb{R}^D$ into a higher dimensional space. The covariance matrix $C$ of the transformed data is
+	Define $\alpha^{(i)} = \frac{1}{m \lambda} \langle x^{(i)}, v \rangle$, then $v = \sum_{i=1}^m \alpha^{(i)} x^{(i)}$. Now project $x \in \mathbb{R}^d$ using $\phi: \mathbb{R}^d \rightarrow \mathbb{R}^D$ into a higher dimensional space. The covariance matrix $C$ of the transformed data is (assume zero-mean)
 	\begin{align}
 		C = \frac{1}{m} \sum_{i=1}^m \phi(x^{(i)}) \phi(x^{(i)})^T
 	\end{align}
@@ -759,7 +760,7 @@
 	\begin{align}
 		v = \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)})
 	\end{align}
-	Substitute (4) and (5) into (3) getting
+	Substitute (3) and (5) into (4) getting
 	\begin{align*}
 		\left[ \frac{1}{m} \sum_{i=1}^m \phi(x^{(i)}) \phi(x^{(i)})^T \right] \left[ \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)}) \right] = \lambda \left[ \sum_{i=1}^m \alpha^{(i)} \phi(x^{(i)}) \right]
 	\end{align*}
