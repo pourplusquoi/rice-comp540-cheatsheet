@@ -374,11 +374,11 @@
 
 \subsection{6.2 \ Boosting}
 \begin{itemize}
-	\item Loss function: $J_l = \sum_{i=1}^m w_l^{(i)} \mathrm{I}(h_l(x^{(i)}) \neq y^{(i)})$
-	\item Prediction: $h(x) = \mathrm{sign}(\sum_{l=1}^L \alpha_l h_l(x))$
+	\item Loss function: $J_l = \sum_{i=1}^m w_l^{(i)} I\left(h_l(x^{(i)}) \neq y^{(i)}\right)$
+	\item Prediction: $h(x) = \mathrm{sign}\left(\sum_{l=1}^L \alpha_l h_l(x)\right)$
 	\item Adaboost algorithm: initialize $w_1^{(i)} = \frac{1}{m}$, for $1 \leq i \leq m$\\
 	1. fit $h_l$ to minimize $J_l = \frac{1}{m} \sum_{i=1}^m w_l^{(i)} L(y^{(i)}, h_l(x^{(i)}))$\\
-	2. calculate error rate $\epsilon_l = \frac{\sum_{i=1}^m w_l^{(i)} \mathrm{I}(h_l(x^{(i)} \neq y^{(i)}))}{\sum_{i=1}^m w_l^{(i)}}$\\
+	2. calculate error rate $\epsilon_l = \frac{\sum_{i=1}^m w_l^{(i)} I\left(h_l(x^{(i)}) \neq y^{(i)}\right)}{\sum_{i=1}^m w_l^{(i)}}$\\
 	3. calculate $\alpha_l = \frac{1}{2} \log{\left( \frac{1 - \epsilon_l}{\epsilon_l} \right)}$, stop if $\epsilon_l \geq \frac{1}{2}$\\
 	4. update $w_{l+1}^{(i)} = \left\{
 	\begin{aligned}
