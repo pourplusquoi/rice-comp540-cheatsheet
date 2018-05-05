@@ -391,21 +391,22 @@
 \subsection{6.3 \ Gradient boosting}
 \subsubsection{6.3.1 \ Gradient boosting for regression}
 \begin{itemize}
-	\item Residuals are negative gradients (squared error loss):\\ $J = \sum_{i=1}^m \frac{1}{2}(y - h(x))^2 \Rightarrow \frac{\partial J}{\partial h(x^{(i)})} = h(x^{(i)}) - y^{(i)}$
+	\item Residuals are negative gradients (squared error loss):\\ $J = \sum_{i=1}^m \frac{1}{2}(y - h(x^{(i)}))^2 \Rightarrow \frac{\partial J}{\partial h(x^{(i)})} = h(x^{(i)}) - y^{(i)}$
 \end{itemize}
 
 \subsubsection{6.3.1 \ Gradient boosting for classification}
 \begin{itemize}
-	\item Loss function: $J = \frac{1}{m} \sum_{i=1}^m D_{KL} (y^{(i)}, h(x^{(i)}))$
+	\item Loss function: $J = \frac{1}{m} \sum_{i=1}^m D_{\mathrm{KL}} (y^{(i)}, h(x^{(i)}))$
 	\item Gradient boosting algorithm ($k$ classes):\\
-	-- Start with an initial $h^{0}...h^{k}$ for $x^{(1)}...x^{(m)}$\\
-	-- Repeat until convergence: Calculate matrix of gradients, it each $h_{add}$ to the negative gradient, $h \leftarrow h + h_{add}$
+	-- Start with an initial $h_1, ..., h_k$ for $x^{(1)}, ..., x^{(m)}$\\
+	-- Repeat until convergence:\\
+	\ \ \ \ -- Calculate matrix of gradients, fit each $h_{k'}^{\mathrm{add}}$ to the negative gradients, $h_{k'} \leftarrow h_{k'} + h_{k'}^{\mathrm{add}}$
 \end{itemize}
 
 \section{7 \ Probabilistic graphical models}
 \subsection{7.1 \ Directed models -- Bayesian network}
 \begin{itemize}
-	\item $P(X) = \prod_i P(x_i | Parents(x_i))$
+	\item $P(X) = \prod_i P(x_i | \mathrm{Parents}(x_i))$
 	\item Reduce number of parameters $O(k^n) \rightarrow O(nk^m)$ if each variable in graph has no more than $m$ parents.
 \end{itemize}
 
@@ -424,7 +425,7 @@
 	\item For directed graphical models, polynomial time.
 	\item Algorithm:\\
 	-- Sort variables in topological order\\
-	-- Sample $x_i$ from distribution $P(x_i | Parents(x_i))$
+	-- Sample $x_i$ from distribution $P(x_i | \mathrm{Parents}(x_i))$
 \end{itemize}
 
 \subsubsection{7.3.2 \ Gibbs sampling}
@@ -432,7 +433,7 @@
 	\item For undirected graphical models.
 	\item Algorithm:\\
 	-- Start with randomly generated values $x_1, ..., x_n$\\
-	-- Iteratively visit each $x_i$ and sample a value for it based on $P(x_i | Neighbors(x_i))$\\
+	-- Iteratively visit each $x_i$ and sample a value for it based on $P(x_i | \mathrm{Neighbors}(x_i))$\\
 	-- Repeat previous step, generate stream of samples
 \end{itemize}
 
@@ -472,7 +473,7 @@
 	\item Define: $\delta_t(i) = \max_{X_1, ..., X_{t-1}} P(X_1, ..., X_{t-1}, X_t=s_i, e_1, ..., e_t)$
 	\item Algorithm:\\
 	-- $\delta_0(i) = \pi(i)$, $1 \leq i \leq n$\\
-	-- $\delta_{t+1}(j) = \max_i \delta_t(i) a_{ij} b_j(e_{t+1})$, $1 \leq j \leq n$, $0 \leq t \leq T-1$\\
+	-- $\delta_{t+1}(j) = b_j(e_{t+1}) \max_i \delta_t(i) a_{ij}$, $1 \leq j \leq n$, $0 \leq t \leq T-1$\\
 	\item Time complexity: $O(n^2T)$
 \end{itemize}
 
@@ -650,8 +651,8 @@
 \begin{itemize}
 	\item Conditional information: $H(Y | X) = \sum_{y \in Y} \sum_{x \in X} p(x, y) \log{\frac{p(x)}{p(x, y)}}$
 	\item Mutual information: $I(X; Y) = \sum_{y \in Y} \sum_{x \in X} p(x, y) \log{\frac{p(x, y)}{p(x)P(y)}}$
-	\item Kullback-Leibler (KL) divergence: $D_{KL} (p||q) = \sum_x p(x) \log{\frac{p(x)}{q(x)}}$
-	\item Cross entropy: $H(p,q) = E_p[- \log q] = H(p) + D_{KL}(p||q)$
+	\item Kullback-Leibler (KL) divergence: $D_{\mathrm{KL}} (p||q) = \sum_x p(x) \log{\frac{p(x)}{q(x)}}$
+	\item Cross entropy: $H(p,q) = E_p[- \log q] = H(p) + D_{\mathrm{KL}}(p||q)$
 \end{itemize}
 
 \subsection{Convex function}
@@ -705,35 +706,35 @@
 \begin{proof}
 	Boosting can be viewed as sequential minimization of an exponential cost function:
 	\begin{align*}
-		J &= \sum_{i=1}^m \exp{\left[ -y^{(i)} H_l(x^{(i)}) \right]}\\
-		H_l(x) &= \sum_{j=1}^l \alpha^{(j)} h^{(j)}(x)
+	J &= \sum_{i=1}^m \exp{\left[ -y^{(i)} H_l(x^{(i)}) \right]}\\
+	H_l(x) &= \sum_{j=1}^l \alpha_j h_j(x)
 	\end{align*}
-	We sequentially minimize $J$ w.r.t. $\alpha^{(j)}$ and $h^{(j)}$ while holding $\alpha^{(1)}, ..., \alpha^{(j-1)}$ and $h^{(1)}, ..., h^{(j-1)}$ fixed. Rewrite $J$ as follows.
+	We sequentially minimize $J$ w.r.t. $\alpha_j$ and $h_j$ while holding $\alpha_1, ..., \alpha_{j-1}$ and $h_1, ..., h_{j-1}$ fixed. Rewrite $J$ as follows.
 	\begin{align*}
-		J = \sum_{i=1}^m \left\{ \exp{\left[ -y^{(i)} H_{l-1}(x^{(i)}) \right]} \exp{\left[ -\alpha^{(l)} y^{(i)} h^{(l)}(x^{(i)}) \right]} \right\}
+	J = \sum_{i=1}^m \left\{ \exp{\left[ -y^{(i)} H_{l-1}(x^{(i)}) \right]} \exp{\left[ -\alpha_l y^{(i)} h_l(x^{(i)}) \right]} \right\}
 	\end{align*}
 	Now define $w_l^{(i)} = \exp{\left[ -y^{(i)} H_{l-1}(x^{(i)}) \right]}$, then
 	\begin{align*}
-		J &= \sum_{i=1}^m w_l^{(i)} \exp{\left[ -\alpha^{(l)} y^{(i)} h^{(l)}(x^{(i)}) \right]}\\
-		&= \sum_{i \in \mathrm{correct}} w_l^{(i)} \exp{\left( -\alpha^{(l)} \right)} + \sum_{i \in \mathrm{incorrect}} w_l^{(i)} \exp{\left( +\alpha^{(l)} \right)}\\
-		&= \left[ \exp{\left( \alpha^{(l)} \right)} - \exp{\left( -\alpha^{(l)} \right)} \right] A + \exp{\left( -\alpha^{(l)} \right)} B
+	J &= \sum_{i=1}^m w_l^{(i)} \exp{\left[ -\alpha_l y^{(i)} h_l(x^{(i)}) \right]}\\
+	&= \sum_{i \in \mathrm{correct}} w_l^{(i)} \exp{\left( -\alpha_l \right)} + \sum_{i \in \mathrm{incorrect}} w_l^{(i)} \exp{\left( +\alpha_l \right)}\\
+	&= \left[ \exp{\left( \alpha_l \right)} - \exp{\left( -\alpha_l \right)} \right] A + \exp{\left( -\alpha_l \right)} B
 	\end{align*}
-	where we define $A = \sum_{i=1}^m w_l^{(i)} I \left[ y^{(i)} \neq h^{(l)}(x^{(i)}) \right]$, $B = \sum_{i=1}^m w_l^{(i)}$, and $\epsilon^{(l)} = \frac{A}{B}$. Setting $\frac{\partial J}{\partial \alpha^{(l)}} = 0$ yields
+	where we define $A = \sum_{i=1}^m w_l^{(i)} I \left[ y^{(i)} \neq h_l(x^{(i)}) \right]$, and $\epsilon_l = \frac{A}{B}$. Setting $\frac{\partial J}{\partial \alpha_l} = 0$ yields
 	\begin{align*}
-		\alpha^{(l)} = \frac{1}{2}\log{ \left[ \frac{1 - \epsilon^{(l)}}{\epsilon^{(l)}} \right] }
+	\alpha_l = \frac{1}{2}\log{ \left[ \frac{1 - \epsilon_l}{\epsilon_l} \right] }
 	\end{align*}
-	To find best $h^{(l)}$, $B$ is a constant, simply minimize $A$. Once we have $\alpha^{(l)}$ and $h^{(l)}$,
+	To find best $h_l$, $B$ is a constant, simply minimize $A$. Once we have $\alpha_l$ and $h_l$,
 	\begin{align*}
-		w_{l+1}^{(i)} = w_l^{(i)} \exp{ \left[ -y^{(i)} \alpha^{(l)} h^{(l)}(x^{(i)}) \right] }
+	w_{l+1}^{(i)} = w_l^{(i)} \exp{ \left[ -y^{(i)} \alpha_l h_l(x^{(i)}) \right] }
 	\end{align*}
 	Therefore, we get
 	\begin{align*}
-		w_{l+1}^{(i)} = \left\{
-		\begin{aligned}
-			&w_l^{(i)} \exp{\left( -\alpha^{(l)} \right)}, \ \ \mathrm{correct \ classification}\\
-			&w_l^{(i)} \exp{\left( +\alpha^{(l)} \right)}, \ \ \mathrm{incorrect \ classification}
-		\end{aligned}
-		\right.
+	w_{l+1}^{(i)} = \left\{
+	\begin{aligned}
+	&w_l^{(i)} \exp{\left( -\alpha_l \right)}, \ \ \mathrm{correct \ classification}\\
+	&w_l^{(i)} \exp{\left( +\alpha_l \right)}, \ \ \mathrm{incorrect \ classification}
+	\end{aligned}
+	\right.
 	\end{align*}
 \end{proof}
 
