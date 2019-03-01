@@ -1,1 +1,1 @@
-# comp540-note
+# rice-comp540-cheatsheet
