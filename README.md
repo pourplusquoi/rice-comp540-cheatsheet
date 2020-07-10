@@ -11,4 +11,4 @@ This is an aggregation of notes, formula and proofs on Rice Statistical Machine 
 
 ## How to contribute?
 
-Please feel free to send pull requests and raise issues if you find something wrong or missing.
+Please feel free to send pull requests or raise issues if you find something wrong or missing.
